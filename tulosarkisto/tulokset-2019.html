@@ -80,19 +80,19 @@
         {{/each}}
       </div>
     </script>
-
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.10/handlebars.min.js"></script>
     <script src="googleSpreadsheetsParser.js"></script>
     <script type="text/javascript">
       window.onload = function () {
+        // To get public URL, see instructions at: https://github.com/tanakaworld/google-spreadsheets-parser
         var nameIndex = 1;
         var registered = new GoogleSpreadsheetsParser(
-          'https://docs.google.com/spreadsheets/d/17b4P0GrKeUPXZadMHYLPex1Wu5ynUenlyKy3749hG5k/pubhtml',
+          'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUJrIyiVjIhRCXxAjcQ96sSYdfr97QtI_okZADNo1o1mKb0GHwYwIdQODsCY0DkZdFUVxOoRWILPZg/pubhtml',
           {sheetTitle: 'Ilmoittautuneet', hasTitle: true}
         );
         var finishingTimes = new GoogleSpreadsheetsParser(
-          'https://docs.google.com/spreadsheets/d/17b4P0GrKeUPXZadMHYLPex1Wu5ynUenlyKy3749hG5k/pubhtml',
+          'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUJrIyiVjIhRCXxAjcQ96sSYdfr97QtI_okZADNo1o1mKb0GHwYwIdQODsCY0DkZdFUVxOoRWILPZg/pubhtml',
           {sheetTitle: 'Ajat', hasTitle: true}
         );
         var series = ['Miehet yleinen 9,6 km', 'Naiset yleinen 9,6 km',
