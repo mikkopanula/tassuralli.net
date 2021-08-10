@@ -25,15 +25,20 @@
       padding-bottom: 20px;
     }
     .jumbotron {
-      background-image: url('jalat-2.jpg');
+      background-image: url('tassuralli-50-tausta.jpg');
       background-repeat: no-repeat;
-      background-position: left -300px;
-      background-size: 100%;
+      background-position: -300px 0px;
+      /*background-size: 130%;*/
     }
     .leadtext {
       text-shadow: 0px 2px 2px #808080;
       /*color: #2e6da4;*/
-      background-color: rgba(255, 255, 255, 0.5);
+      background-color: rgba(255, 255, 255, 0.3);
+      border-radius: 5px;
+    }
+    .fifty {
+      font-size: bigger;
+      color: yellow;
     }
     .titleText {
       font-size: 50px;
@@ -44,9 +49,15 @@
     }
     .welcomeText {
       font-weight: bold;
+      color: white;
     }
     .logo {
       width: 200px;
+      margin: 10px;
+      float: left;
+    }
+    .fireworks-logo {
+      width: 167px;
       margin: 10px;
       float: left;
     }
@@ -62,7 +73,7 @@
       padding-right: 4px;
     }
     .blink_me {
-      animation: blinker 1s linear infinite;
+      animation: blinker 0.5s linear infinite;
     }
     @keyframes blinker {
       50% {
@@ -95,11 +106,12 @@
     <!-- Main jumbotron for a primary marketing message or call to action -->
     <div class="jumbotron">
       <div class="container leadtext">
-        <img class="logo" src="logo-nelio-iso.jpg"/>
+        <!--<img class="logo" src="logo-nelio-iso.jpg"/>-->
+        <img class="fireworks-logo" src="fireworks.png"/>
         <!--<img class="sponsor-logo" src="lakeus-sport-logo.png"/>-->
-        <h2 class="titleText">50. Tassuralli pe 3.9.2021 klo 18</h2>
+        <h2 class="titleText"><span class="fifty">50.</span> Tassuralli pe 3.9.2021 klo 18</h2>
         <p class="welcomeText">
-        Tervetuloa perinteiseen juoksutapahtumaan Seinäjoen Niemistöön.
+        Tervetuloa perinteiseen juoksutapahtumaan Seinäjoen Niemistöön. Tänä vuonna juhlitaan puoli vuosisataa järjestettyä tapahtumaa!
         <!--Tassuralli juostiin hienossa alkusyksyn säässä 70 juoksijan voimin.<br>
         Kiitoksia osallistujille! Ensi vuonna jatketaan juhlavuoden merkeissä!-->
         </p>
