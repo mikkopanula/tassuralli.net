@@ -27,7 +27,7 @@
 
   <body>
 
-    <h3>50. Tassuralli, 3.9.2020 - TULOKSET</h3>
+    <h3>50. Tassuralli, 3.9.2021 - TULOKSET</h3>
 
     <div id="results">
     </div>
@@ -65,7 +65,7 @@
     <script id="pressFormat" type="text/x-handlebars-template">
       <div class="pressFormat">
         <h3>Tulokset lehdistömuodossa</h3>
-        50. Tassuralli, 3.9.2020, Seinäjoki<br>
+        50. Tassuralli, 3.9.2021, Seinäjoki<br>
         Kaikissa sarjoissa matka 9.6km<br>
         {{#each series}}
           {{#if results}}
@@ -88,11 +88,11 @@
         // To get public URL, see instructions at: https://github.com/tanakaworld/google-spreadsheets-parser
         var nameIndex = 1;
         var registered = new GoogleSpreadsheetsParser(
-          'https://docs.google.com/spreadsheets/d/e/2PACX-1vSFLuOu93Ql2xwmUQt9dCk4a2sxUAf_6dXUOU_xBNb7erZE0JU_KNXStmlzO5TxBSYSz4Mbmxok2aoG/pubhtml',
+          'https://docs.google.com/spreadsheets/d/e/1tO_Em_ATwK35qyh281hf0V6oIY69smqMxn1KdPDqXvQ/pubhtml',
           {sheetTitle: 'Ilmoittautuneet', hasTitle: true}
         );
         var finishingTimes = new GoogleSpreadsheetsParser(
-          'https://docs.google.com/spreadsheets/d/e/2PACX-1vSFLuOu93Ql2xwmUQt9dCk4a2sxUAf_6dXUOU_xBNb7erZE0JU_KNXStmlzO5TxBSYSz4Mbmxok2aoG/pubhtml',
+          'https://docs.google.com/spreadsheets/d/e/1tO_Em_ATwK35qyh281hf0V6oIY69smqMxn1KdPDqXvQ/pubhtml',
           {sheetTitle: 'Ajat', hasTitle: true}
         );
         var series = ['Miehet yleinen 9,6 km', 'Naiset yleinen 9,6 km',
