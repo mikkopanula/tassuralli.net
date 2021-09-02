@@ -83,19 +83,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.10/handlebars.min.js"></script>
     <script type="text/javascript">
-      var spreadsheetId = '1K6umATFK7x3smh0WUy9W_rbgMwL0MI2NJ1CDuZ9QpUM';
-      var registered, finishingTimes;
-      fetch(`https://docs.google.com/spreadsheets/d/${spreadsheetId}/gviz/tq?tqx=out:json&sheet=Ilmoittautuneet`)
-          .then(res => res.text())
-          .then(text => {
-            registered = JSON.parse(text.substr(47).slice(0, -2)).table.rows;
-          });        
-      fetch(`https://docs.google.com/spreadsheets/d/${spreadsheetId}/gviz/tq?tqx=out:json&sheet=Ajat`)
-        .then(res => res.text())
-        .then(text => {
-          finishingTimes = JSON.parse(text.substr(47).slice(0, -2)).table.rows;
-        });
-
       window.onload = function () {
         var series = ['Miehet yleinen 9,6 km', 'Naiset yleinen 9,6 km',
           'Miehet 40v 9,6 km', 'Naiset 40v 9,6 km', 'Miehet 50v 9,6 km', 'Naiset 50v 9,6 km',
@@ -103,70 +90,87 @@
         var serieShorthands = ['M', 'N',
           'M40', 'N40', 'M50', 'N50',
           'M60', 'N60', 'Hölkkä'];
-
         function isSeries(str) {
           return series.some(function (s) { return s === str});
         }
-        var namesAndNumbers = registered.map(function(row) {
-          var cols = row.c;
-          return {
-            name: cols[1].v,
-            number: parseInt(cols[7].v, 10),
-            serie: cols[3].v
-          };
-        });
-        console.log('registered', registered);
-        console.log('finishingTimes', finishingTimes);
-        var finishingTimesByNumber = finishingTimes.reduce(function(map, row) {
-          var cols = row.c;
-          map[parseInt(cols[0].v, 10)] = parseFloat(cols[1].v);
-          return map;
-        }, {});
-        console.log('namesAndNumbers', namesAndNumbers);
-        console.log('finishingTimesByNumber', finishingTimesByNumber);
 
-        var serieScript = $("#serie").html();
-        var serieTemplate = Handlebars.compile(serieScript);
+        var registeredUrl = 'https://pure-earth-90648.herokuapp.com/api?id=1tO_Em_ATwK35qyh281hf0V6oIY69smqMxn1KdPDqXvQ&sheet=Ilmoittautuneet';
+        var timesUrl = 'https://pure-earth-90648.herokuapp.com/api?id=1tO_Em_ATwK35qyh281hf0V6oIY69smqMxn1KdPDqXvQ&sheet=Ajat';
+        fetch(registeredUrl)
+          .then(response => response.json())
+          .then(registered => {
+            console.log(registered);
 
-        var allSeriesData = [];
-        series.forEach(function(serieName, serieIndex) {
-          var serieParticipants = namesAndNumbers.filter(function (nn) { return nn.serie == serieName; });
-          var serieParticipantsWithFinishingTimes = serieParticipants.map(function (sp) {
-            sp.time = finishingTimesByNumber[sp.number];
-            if (sp.time) {
-              var hours = Math.floor(sp.time / 60);
-              var minutes = Math.floor(sp.time - hours * 60);
-              var seconds = (sp.time - Math.floor(sp.time)) * 100;
-              sp.formattedTime = hours.toString().padStart(2, '0') + ':' + minutes + ':' + seconds.toFixed(0).toString().padStart(2, '0');
-            }
-            return sp;
+            fetch(timesUrl)
+              .then(response => response.json())
+              .then(times => {
+                console.log(times);
+
+                generateResults(registered.rows, times.rows);
+
+              });
           });
-          var numFinished = serieParticipantsWithFinishingTimes.filter(function (nn) { return nn.time !== undefined; }).length;
-          var orderedResults = serieParticipantsWithFinishingTimes.sort(function (a, b) {
-            if (!b.time) return -1;
-            if (!a.time) return 1;
-            return a.time - b.time;
+
+        function generateResults(registered, finishingTimes) {
+          var namesAndNumbers = registered.map(function(row) {
+            return {
+              name: row['Nimesi'],
+              number: parseInt(row['Vapaa viesti'], 10),
+              serie: row['Sarja']
+            };
           });
-          var orderedResultsWithPosition = orderedResults.map(function(r, i) { r.position = i + 1; return r;});
-          var serieData = {
-            title: serieName,
-            titleShorthand: serieShorthands[serieIndex],
-            numFinished: numFinished,
-            numNotFinished: serieParticipants.length - numFinished,
-            allFinished: serieParticipants.length === numFinished,
-            results: orderedResultsWithPosition
-          };
-          allSeriesData.push(serieData);
+          console.log('registered', registered);
+          console.log('finishingTimes', finishingTimes);
+          var finishingTimesByNumber = finishingTimes.reduce(function(map, row) {
+            map[parseInt(row['Numero'], 10)] = parseFloat(row['Aika']);
+            return map;
+          }, {});
+          console.log('namesAndNumbers', namesAndNumbers);
+          console.log('finishingTimesByNumber', finishingTimesByNumber);
 
-          var serieHtml = serieTemplate(serieData);
-          $("#results").append(serieHtml);
-        });
+          var serieScript = $("#serie").html();
+          var serieTemplate = Handlebars.compile(serieScript);
 
-        var pressScript = $("#pressFormat").html();
-        var pressTemplate = Handlebars.compile(pressScript);
-        var pressFormatHtml = pressTemplate({series: allSeriesData});
+          var allSeriesData = [];
+          series.forEach(function(serieName, serieIndex) {
+            var serieParticipants = namesAndNumbers.filter(function (nn) { return nn.serie == serieName; });
+            var serieParticipantsWithFinishingTimes = serieParticipants.map(function (sp) {
+              sp.time = finishingTimesByNumber[sp.number];
+              if (sp.time) {
+                var hours = Math.floor(sp.time / 60);
+                var minutes = Math.floor(sp.time - hours * 60);
+                var seconds = (sp.time - Math.floor(sp.time)) * 100;
+                sp.formattedTime = hours.toString().padStart(2, '0') + ':' + minutes + ':' + seconds.toFixed(0).toString().padStart(2, '0');
+              }
+              return sp;
+            });
+            var numFinished = serieParticipantsWithFinishingTimes.filter(function (nn) { return nn.time !== undefined; }).length;
+            var orderedResults = serieParticipantsWithFinishingTimes.sort(function (a, b) {
+              if (!b.time) return -1;
+              if (!a.time) return 1;
+              return a.time - b.time;
+            });
+            var orderedResultsWithPosition = orderedResults.map(function(r, i) { r.position = i + 1; return r;});
+            var serieData = {
+              title: serieName,
+              titleShorthand: serieShorthands[serieIndex],
+              numFinished: numFinished,
+              numNotFinished: serieParticipants.length - numFinished,
+              allFinished: serieParticipants.length === numFinished,
+              results: orderedResultsWithPosition
+            };
+            allSeriesData.push(serieData);
 
-        $("#resultsInPressFormat").append(pressFormatHtml);
+            var serieHtml = serieTemplate(serieData);
+            $("#results").append(serieHtml);
+          });
+
+          var pressScript = $("#pressFormat").html();
+          var pressTemplate = Handlebars.compile(pressScript);
+          var pressFormatHtml = pressTemplate({series: allSeriesData});
+
+          $("#resultsInPressFormat").append(pressFormatHtml);
+        }
       };
     </script>
   </body>
